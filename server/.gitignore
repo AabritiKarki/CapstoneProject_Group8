@@ -1,0 +1,4 @@
+# Virtual Env Folder
+venv/
+# Environment File
+.env

@@ -15,12 +15,12 @@ class MongoEncoder(json.JSONEncoder):
         return super(MongoEncoder, self).default(obj) 
 
 mail_settings = {
-    "MAIL_SERVER": 'in-v3.mailjet.com',
-    "MAIL_PORT": 465,
-    "MAIL_USE_TLS": False,
-    "MAIL_USE_SSL": True,
-    "MAIL_USERNAME": os.environ['MAILJET_API_KEY'],
-    "MAIL_PASSWORD": os.environ['MAILJET_SECRET_KEY'],
+    "MAIL_SERVER": os.environ['MAIL_SERVER'],
+    "MAIL_PORT": 587,
+    "MAIL_USE_TLS": True,
+    "MAIL_USE_SSL": False,
+    "MAIL_USERNAME": os.environ['MAIL_USERNAME'],
+    "MAIL_PASSWORD": os.environ['MAIL_PASSWORD'],
     "MAIL_DEFAULT_SENDER": os.environ['MAIL_DEFAULT_SENDER'],
 }
 

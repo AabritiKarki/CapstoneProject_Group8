@@ -15,6 +15,11 @@ mail = Mail(app)
 @app.get('/')
 def index():
     sample_record = db.response.find_one({}, sort=[( '_id', -1 )])
+    # admin_emails = [user['email'] for user in db.users.find()]
+    # msg = Message('Health and Wellness Survey: New Submission Receieved!', recipients=admin_emails)
+    # msg.body = render_template('cognixrsummary.html', **sample_record)
+    # msg.html = render_template('cognixrsummary.html', **sample_record)
+    # mail.send(msg)
     return render_template('cognixrsummary.html', **sample_record)
 
 @app.post('/')
@@ -34,6 +39,9 @@ def get_form_submission():
     msg.body = render_template('cognixrsummary.html', **data)
     msg.html = render_template('cognixrsummary.html', **data)
     mail.send(msg)
+    if data.get('provider_email') != None:
+        msg.recipients = [data['provider_email']]
+        mail.send(msg)
     return {'success': True, 'data': data}
 
 if __name__ == '__main__':

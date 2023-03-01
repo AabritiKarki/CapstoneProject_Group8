@@ -127,7 +127,7 @@
           <p style="margin-top: 0;"><strong>Initials: </strong>{{ initials}}</p>
           <p><strong>Gender: </strong>{{ gender }}</p>
           <p><strong>Age: </strong> {{ age }}</p>
-          <p><strong>Country-Province/States: </strong>{{ address }}</p>
+          <p><strong>Country-Province/State: </strong>{{ address }}</p>
           <p><strong>Occupation: </strong>{{ occupation }}</p>
         </td>
       </tr>
@@ -165,14 +165,14 @@
           <p style="margin-top: 0;"><strong>Condition: </strong> {{ mental_condition or felt_condition }}</p>
           <p><strong>Affect on daily life: </strong> {{daily_affect or 'N/A'}}</p>
           <p><strong>Affect on sleep pattern: </strong>{{sleep_patterns_ptsd}} {{sleep_patterns_anxiety}}
-            {{sleep_patterns_trauma}} {{sleep_patterns_sud}} </p>
+            {{sleep_patterns_trauma}} {{sleep_patterns_sud}}</p>
           <p><strong>Last experienced symptoms: </strong>{{last_symptom_ptsd}} {{last_symptom_anxiety}}
             {{last_symptom_trauma}}{{history_sud}}</p>
-          <p><strong>Coping Mechanism: </strong>{{cope_text_ptsd}} {{cope_text_anxiety}} {{cope_text_trauma}}
+          <p><strong>Coping mechanism: </strong>{{cope_text_ptsd}} {{cope_text_anxiety}} {{cope_text_trauma}}
             {{cope_text_sud}} </p>
-          <p><strong>Prefered Treatment: </strong>{{ preferred_therapy or 'N/A' }}</p>
-          <p><strong>Comfortable Treatment: </strong>{{comfortable_treatment_ptsd}} {{comfortable_treatment_anxiety}}
-            {{comfortable_treatment_trauma}} {{comfortable_treatment_sud}} </p>
+          <p><strong>Comfortable with treatment: </strong>{{comfortable_treatment_ptsd}} {{comfortable_treatment_anxiety}}
+              {{comfortable_treatment_trauma}} {{comfortable_treatment_sud}}</p>
+          <p><strong>Preferred treatment: </strong>{{ preferred_therapy or 'N/A' }}</p>
         </td>
       </tr>
     </table>

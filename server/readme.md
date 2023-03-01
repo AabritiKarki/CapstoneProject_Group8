@@ -1,6 +1,6 @@
 ## Get Started
 
-1. Clone or download the project on your computer
+1. Clone the project on your computer and go to `server/` folder
 
 2. Make copy of `.env` file from `.env.example` and add environment variables 
 
@@ -40,5 +40,5 @@ pip install -r requirements.txt
 python app.py
 # or
 export FLASK_APP=app.py
-flask run
+flask run --debug
 ```

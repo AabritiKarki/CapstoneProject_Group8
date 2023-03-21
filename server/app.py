@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request
 from pymongo import MongoClient
 from flask_mail import Mail, Message
-from utils import MongoEncoder, DATABASE_URI, mail_settings
-from utils import process_answer
+from utils import MongoEncoder, DATABASE_URI, ObjectId
+from utils import process_answer, mail_settings, get_summary
+from datetime import datetime
 
 client = MongoClient(DATABASE_URI)
 db = client.capstone
@@ -14,15 +15,45 @@ mail = Mail(app)
 
 @app.get('/')
 def index():
-    sample_record = db.response.find_one({}, sort=[( '_id', -1 )])
-    # admin_emails = [user['email'] for user in db.users.find()]
-    # msg = Message('Health and Wellness Survey: New Submission Receieved!', recipients=admin_emails)
-    # msg.body = render_template('cognixrsummary.html', **sample_record)
-    # msg.html = render_template('cognixrsummary.html', **sample_record)
-    # mail.send(msg)
-    return render_template('cognixrsummary.html', **sample_record)
+    all_questions = [{'name': question['name'], 'id': question['_id']} for question in db.questionnaire.find()]
+    return render_template('questionnaire.html', all_questions=all_questions)
 
-@app.post('/')
+@app.get('/questionnaire/<id>')
+def get_questionnaire(id):
+    if id:
+        doc = db.questionnaire.find_one({'_id': ObjectId(id)})
+        if doc and doc.get('_id'):
+            return {'success': True, 'data': doc}
+    return {'success': False, 'data': None}
+
+@app.post('/save-questionnaire')
+def create_questionnaire():
+    data = request.get_json()
+    name = f"Sample {int(datetime.utcnow().timestamp())}"
+    db.questionnaire.insert_one({
+         'name': name,
+         'questionnaire': data
+    })
+    return {'success': True}
+
+@app.post('/summarize')
+def compute_summary():
+    data = request.get_json()
+    email_list = [user['email'] for user in db.users.find()]
+    email = data.get('email')
+    if email:
+        email_list = email_list + email.split(',')
+    response = data.get('response')
+    summary = get_summary(response)
+    if summary:
+        summary = [line for line in summary.split('.') if len(line.strip()) > 0]
+    msg = Message('New Submission Receieved!', recipients=email_list)
+    msg.body = render_template('cognisummary.html', summary=summary)
+    msg.html = render_template('cognisummary.html', summary=summary)
+    mail.send(msg)
+    return {'success': True, 'data': summary}
+
+@app.post('/submit')
 def get_form_submission():
     severity = 'GREEN'
     data = request.get_json()

@@ -4,9 +4,15 @@ import os
 from typing import Dict, Tuple
 from dotenv import load_dotenv
 from bson.json_util import ObjectId
+from transformers import pipeline
+
 load_dotenv()
 
 DATABASE_URI = os.environ.get("MONGO_URI")
+
+ObjectId = ObjectId
+
+summarizer = pipeline("summarization", model="./bart-large-cnn/")
 
 class MongoEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -23,6 +29,16 @@ mail_settings = {
     "MAIL_PASSWORD": os.environ['MAIL_PASSWORD'],
     "MAIL_DEFAULT_SENDER": os.environ['MAIL_DEFAULT_SENDER'],
 }
+
+def get_summary(questionnaire):
+    text = ''
+    for item in questionnaire:
+        text += f'''Question: {item['question']}
+        Answer: {item['answer']}'''
+    summary = summarizer(text)
+    if summary and len(summary):
+        return summary[0].get('summary_text')
+    return None
 
 # Read answer config
 with open('answers_conig.yaml') as f:

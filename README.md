@@ -13,7 +13,8 @@ This project may assist a professional in terms of primary analysis and thinking
 
 ## Data
 In the project, two phases were implemented in the data collection method to fulfill the requirement presented by CogniXR. The two phases are shown in the flowchart below: 
-[ To be inserted ]
+
+<img alt="Data Collection" height="500px" src="EDA/images/data-collection.png" />
 
 ## Methodology
 The first phase of the project aim was to find severity based on the questions (first dataset) and to provide summarization of the questionnaire data in email. The severity would denote the urgency of the patient where Red (Highly severe), Yellow (Moderate severity), Green (Low severity). Using this severity would help the mental health providers to address the patient according to the urgency of the mental health patient. Along with this severity report would be sent to the provider once the patient  fills out a form.
@@ -26,7 +27,7 @@ To calculate the severity of the patient we developed a scoring logic and assess
 
 Here is the example of the scoring logic. We have used a score of 0-3 range. The positive sentiment is considered as 0 and higher scores indicates severe symptoms. According to the options selected by the patients, the total score will be calculated and the severity is given Red (greater than 20), Yellow (between 10 and 20) and Green (less than 10). 
 
-[ insert image ]
+<img alt="Mathmatical Model" height="500px" src="EDA/images/mathmatical-model.png" />
 
 ### Summarization with BART
 To provide summarization of any kind of form response, BART model was used. As a questionnaire can be thought as an interrogation, we used SAMSum dataset - which consists of 16,369 conversations that were created by linguists who are fluent in English, they created real-life conversations reflecting their daily life. The style consists of informal, semi-formal, and formal type of conversations that makes it diversified on the basic conversation patterns. The data also consists of Slang words, emoticons, and typos which were annotated with summaries.

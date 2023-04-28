@@ -1,5 +1,5 @@
 # Capstone Project - Group8
-## Calculation of severity for need of assessment and summarization of response in psychometric questionnaire
+## Calculation of severity and summarization of response in psychometric questionnaire
 
 ## Introduction
 CogniXR has created a platform to increase the accessibility of mental healthcare solutions so that medical professionals and wellness initiatives may assist more people in achieving more balanced recovery. One of the most pressing challenges of our time is mental health.10% of the worldwide disease burden and 25.1% of non-fatal disease burden are accounted for by mental, neurological, and substance use disorders. Since there are not enough therapists to patients, these easily accessible platforms will be crucial in raising the ratio.

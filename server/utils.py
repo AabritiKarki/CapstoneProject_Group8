@@ -5,10 +5,12 @@ from typing import Dict, Tuple
 from dotenv import load_dotenv
 from bson.json_util import ObjectId
 from transformers import pipeline
+from google.cloud import translate
 
 load_dotenv()
 
 DATABASE_URI = os.environ.get("MONGO_URI")
+GCLOUD_PROJECT = os.environ.get("GCLOUD_PROJECT")
 
 ObjectId = ObjectId
 
@@ -30,15 +32,57 @@ mail_settings = {
     "MAIL_DEFAULT_SENDER": os.environ['MAIL_DEFAULT_SENDER'],
 }
 
-def get_summary(questionnaire):
+def get_summary(questionnaire, locale='en'):
     text = ''
+    client = translate.TranslationServiceClient()
     for item in questionnaire:
-        text += f'''Question: {item['question']}
-        Answer: {item['answer']}'''
-    summary = summarizer(text)
-    if summary and len(summary):
-        return summary[0].get('summary_text')
-    return None
+        text += f'''Question: {item['question']}--Answer: {item['answer']}--'''
+    if locale == 'fr':
+        translated = client.translate_text(parent=GCLOUD_PROJECT, contents=[text], source_language_code='fr', target_language_code='en')
+        text = translated.translations[0].translated_text
+    text = "\n".join(text.split("--"))
+    # compute min length
+    max_length = 512
+    min_length = 192
+    print("len", len(text))
+    if len(text) <= 450:
+        min_length = 8
+        max_length = 16
+    elif len(text) <= 650:
+        min_length = 16
+        max_length = 32
+    elif len(text) <= 850:
+        min_length = 32
+        max_length = 64
+    elif len(text) <= 1000:
+        min_length = 32
+        max_length = 96
+    elif len(text) <= 1250:
+        min_length = 64
+        max_length = 128
+    elif len(text) <= 1500:
+        min_length = 64
+        max_length = 172
+    elif len(text) <= 1800:
+        min_length = 96
+        max_length = 256
+    elif len(text) <= 2000:
+        min_length = 128
+        max_length = 328
+    elif len(text) <= 2400:
+        min_length = 128
+        max_length = 384
+    summary = summarizer(text, max_length=max_length, min_length=min_length)
+    summary_fr = ''
+    try:
+        if summary and len(summary):
+            summary = summary[0].get('summary_text')
+            summary_fr = client.translate_text(parent=GCLOUD_PROJECT,  contents=[summary], target_language_code='fr', source_language_code='en')
+            summary_fr = summary_fr.translations[0].translated_text
+    except:
+        pass
+
+    return summary, summary_fr
 
 # Read answer config
 with open('answers_conig.yaml') as f:
@@ -58,7 +102,6 @@ def get_score(question, answer):
         try:
             return answer_config['answer_scores'][answer.strip()]
         except:
-            #print(f"{answer} not found for {question}")
             return 0
     if answer_config['type'] == 'multi_select':
         total = 0
@@ -67,7 +110,6 @@ def get_score(question, answer):
             try:
                 total += answer_config['answer_scores'][a.strip()]
             except:
-                #print(f"{a} not found for {question}")
                 pass
         return total
 
